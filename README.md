@@ -1,6 +1,8 @@
 # radix
 Convert floats to radix strings, just the way JavaScript does it.
 
+This does **not** call JavaScript code whatsoever. This is a completely native solution to Go.
+
 ## Usage
 
 ```go
