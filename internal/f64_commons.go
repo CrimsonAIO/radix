@@ -40,7 +40,7 @@ func (wrapper F64Wrapper) Significand() uint64 {
 // Returns the next greater float64. Returns positive infinity on positive infinity input.
 func (wrapper F64Wrapper) Next() float64 {
 	if uint64(wrapper) == infinity {
-		return float64(infinity)
+		return math.Float64frombits(infinity)
 	}
 
 	if wrapper.Sign() < 0 && wrapper.Significand() == 0 {
