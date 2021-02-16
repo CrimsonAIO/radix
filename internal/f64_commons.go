@@ -1,5 +1,7 @@
 package internal
 
+import "math"
+
 const(
 	signMask                uint64 = 9223372036854775808
 	exponentMask            uint64 = 9218868437227405312
@@ -15,7 +17,7 @@ type F64Wrapper uint64
 
 // Wraps a float64 into a new wrapper.
 func WrapF64(n float64) F64Wrapper {
-	return F64Wrapper(Float64ToUInt64(n))
+	return F64Wrapper(math.Float64bits(n))
 }
 
 func (wrapper F64Wrapper) Sign() int {
@@ -46,9 +48,9 @@ func (wrapper F64Wrapper) Next() float64 {
 	}
 
 	if wrapper.Sign() < 0 {
-		return UInt64ToFloat64(uint64(wrapper) - 1)
+		return math.Float64frombits(uint64(wrapper) - 1)
 	} else {
-		return UInt64ToFloat64(uint64(wrapper) + 1)
+		return math.Float64frombits(uint64(wrapper) + 1)
 	}
 }
 
