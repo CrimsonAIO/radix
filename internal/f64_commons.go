@@ -19,7 +19,7 @@ func WrapF64(n float64) F64Wrapper {
 }
 
 func (wrapper F64Wrapper) Sign() int {
-	if uint64(wrapper) &signMask == 0 {
+	if uint64(wrapper) & signMask == 0 {
 		return 1
 	} else {
 		return -1
@@ -54,7 +54,7 @@ func (wrapper F64Wrapper) Next() float64 {
 
 // Returns true if the float64 is denormal.
 func (wrapper F64Wrapper) IsDenormal() bool {
-	return uint64(wrapper) &exponentMask == 0
+	return uint64(wrapper) & exponentMask == 0
 }
 
 func (wrapper F64Wrapper) Exponent() int {
