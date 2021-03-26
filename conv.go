@@ -45,9 +45,11 @@ func ToString(n float64, radix int) (string, error) {
 		return "0", nil
 	}
 
-	// If n is positive or negative infinity, return infinity.
-	if math.IsInf(n, 0) {
+	// If n is positive or negative infinity, return infinity in string representation.
+	if math.IsInf(n, 1) {
 		return "Infinity", nil
+	} else if math.IsInf(n, -1) {
+		return "-Infinity", nil
 	}
 
 	// Buffer for the result. We start with the decimal point in the
