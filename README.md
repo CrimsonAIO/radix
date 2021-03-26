@@ -41,14 +41,7 @@ BenchmarkConv-12    	 2363449	       507.3 ns/op
 ```
 If you wish to benchmark on your own system, clone this repository and run `go test -bench .`
 
-## Purpose
-Sometimes you need to convert a float to a specific radix, however this
-is not possible to do in Go. There is extremely little documentation online
-about how to do this, and the only resources close to how to re-create it is
-to look in browser engines, like Google's V8 engine. Even then, it can be a
-hassle to replicate in Go.
-
-The logic for this has been taken from Google's V8 engine, which is extremely
-reliable. The source can be found at:
+## Credits
+The logic for this has been taken from Google's V8 engine. The source can be found at:
 [DoubleToRadixCString (main function)](https://github.com/v8/v8/blob/f83601408c3207211bc8eb82a8802b01fd82c775/src/numbers/conversions.cc#L1269) \
 [double.h (double-uint64 utility)](https://github.com/v8/v8/blob/f83601408c3207211bc8eb82a8802b01fd82c775/src/numbers/double.h)
