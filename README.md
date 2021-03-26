@@ -30,6 +30,17 @@ func main() {
 }
 ```
 
+## Benchmarks
+```
+goos: windows
+goarch: amd64
+pkg: github.com/CrimsonAIO/radix
+cpu: AMD Ryzen 5 1600 Six-Core Processor            
+BenchmarkConv
+BenchmarkConv-12    	 2363449	       507.3 ns/op
+```
+If you wish to benchmark on your own system, clone this repository and run `go test -bench .`
+
 ## Purpose
 Sometimes you need to convert a float to a specific radix, however this
 is not possible to do in Go. There is extremely little documentation online
