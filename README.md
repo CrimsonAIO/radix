@@ -42,6 +42,6 @@ BenchmarkConv-12    	 2363449	       507.3 ns/op
 If you wish to benchmark on your own system, clone this repository and run `go test -bench .`
 
 ## Credits
-The logic for this has been taken from Google's V8 engine. The source can be found at:
+The logic for this has been taken from Google's V8 engine. The source can be found at: \
 [DoubleToRadixCString (main function)](https://github.com/v8/v8/blob/f83601408c3207211bc8eb82a8802b01fd82c775/src/numbers/conversions.cc#L1269) \
 [double.h (double-uint64 utility)](https://github.com/v8/v8/blob/f83601408c3207211bc8eb82a8802b01fd82c775/src/numbers/double.h)
