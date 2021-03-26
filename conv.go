@@ -1,26 +1,38 @@
 package radix
 
 import (
+	"errors"
 	"fmt"
 	"github.com/CrimsonAIO/radix/internal"
 	"math"
 )
 
-const(
+const (
 	// characters used for character conversion.
 	chars = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 	// buffer array size.
 	bufferSize = 2200
+
+	// MinRadix is the minimum radix that can be specified in ToString.
+	MinRadix = 2
+	// MaxRadix is the maximum radix that can be specified in ToString.
+	MaxRadix = 36
 )
 
-// Converts n to radix.
+// ErrRadixOutOfRange indicates that the specified radix is not between MinRadix and MaxRadix inclusively.
+var ErrRadixOutOfRange = errors.New("radix out of range")
+
+// ToString converts n to a radix string.
+//
+// The specified radix must be between 2 and 36 (inclusively.)
+// If not, ErrRadixOutOfRange will be the returned error.
 //
 // The returned error is non-nil if an error occurs.
 func ToString(n float64, radix int) (string, error) {
 	// Radix should meet the requirement: n >= 2 && n <= 36
-	if radix < 2 || radix > 36 {
-		return "", fmt.Errorf("radix %d must be between 2 and 36 inclusively", radix)
+	if radix < MinRadix || radix > MaxRadix {
+		return "", ErrRadixOutOfRange
 	}
 
 	// If n is NaN then the result is always NaN.
@@ -81,12 +93,12 @@ func ToString(n float64, radix int) (string, error) {
 			fraction -= float64(digit)
 
 			// Round to even.
-			if fraction > 0.5 || (fraction == 0.5 && (digit & 1) == 1) {
-				if fraction + delta > 1 {
+			if fraction > 0.5 || (fraction == 0.5 && (digit&1) == 1) {
+				if fraction+delta > 1 {
 					// We need to back trace already written digits in case of carry-over.
 					for {
 						fractionCursor--
-						if fractionCursor == bufferSize / 2 {
+						if fractionCursor == bufferSize/2 {
 							if buffer[fractionCursor] != '.' {
 								return "", fmt.Errorf("rune at index %d should be '.', instead: %d (%s)", fractionCursor, buffer[fractionCursor], string(buffer[fractionCursor]))
 							}
@@ -103,8 +115,8 @@ func ToString(n float64, radix int) (string, error) {
 						} else {
 							digit = c - '0'
 						}
-						if int(digit) + 1 < radix {
-							buffer[fractionCursor] = rune(chars[digit + 1])
+						if int(digit)+1 < radix {
+							buffer[fractionCursor] = rune(chars[digit+1])
 							fractionCursor++
 							break
 						}
@@ -121,7 +133,7 @@ func ToString(n float64, radix int) (string, error) {
 	}
 
 	// Compute integer digits. Fill unrepresented digits with zero.
-	for internal.WrapF64(integer / float64(radix)).Exponent() > 0 {
+	for internal.WrapF64(integer/float64(radix)).Exponent() > 0 {
 		integer /= float64(radix)
 		intCursor--
 		buffer[intCursor] = '0'
