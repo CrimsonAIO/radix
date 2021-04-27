@@ -2,7 +2,7 @@ package internal
 
 import "math"
 
-const(
+const (
 	signMask                uint64 = 9223372036854775808
 	exponentMask            uint64 = 9218868437227405312
 	significandMask         uint64 = 4503599627370495    // excludes hidden bit.
@@ -15,13 +15,13 @@ const(
 
 type F64Wrapper uint64
 
-// Wraps a float64 into a new wrapper.
+// WrapF64 wraps n into a new F64Wrapper.
 func WrapF64(n float64) F64Wrapper {
 	return F64Wrapper(math.Float64bits(n))
 }
 
 func (wrapper F64Wrapper) Sign() int {
-	if uint64(wrapper) & signMask == 0 {
+	if uint64(wrapper)&signMask == 0 {
 		return 1
 	} else {
 		return -1
@@ -37,7 +37,8 @@ func (wrapper F64Wrapper) Significand() uint64 {
 	}
 }
 
-// Returns the next greater float64. Returns positive infinity on positive infinity input.
+// Next gets the next greatest float64.
+// Returns positive infinity on positive infinity input.
 func (wrapper F64Wrapper) Next() float64 {
 	if uint64(wrapper) == infinity {
 		return math.Float64frombits(infinity)
@@ -54,9 +55,8 @@ func (wrapper F64Wrapper) Next() float64 {
 	}
 }
 
-// Returns true if the float64 is denormal.
 func (wrapper F64Wrapper) IsDenormal() bool {
-	return uint64(wrapper) & exponentMask == 0
+	return uint64(wrapper)&exponentMask == 0
 }
 
 func (wrapper F64Wrapper) Exponent() int {
