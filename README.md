@@ -29,6 +29,7 @@ func main() {
 	fmt.Println(result)
 }
 ```
+Check it out on [The Go Playground](https://play.golang.org/p/JFKqE68pII7).
 
 ## Benchmarks
 ```
