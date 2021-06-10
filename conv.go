@@ -1,8 +1,30 @@
+/*
+ * MIT License
+ *
+ * Copyright (C) 2021 Crimson Technologies LLC. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package radix
 
 import (
-	"errors"
-	"fmt"
 	"github.com/CrimsonAIO/radix/internal"
 	"math"
 )
@@ -20,36 +42,25 @@ const (
 	MaxRadix = 36
 )
 
-// ErrRadixOutOfRange indicates that the specified radix is not between MinRadix and MaxRadix inclusively.
-var ErrRadixOutOfRange = errors.New("radix out of range")
-
-// ToString converts n to a radix string.
+// ToString converts n to radix.
 //
-// The specified radix must be between 2 and 36 (inclusively.)
-// If not, ErrRadixOutOfRange will be the returned error.
-//
-// The returned error is non-nil if an error occurs.
-func ToString(n float64, radix int) (string, error) {
-	// Radix should meet the requirement: n >= 2 && n <= 36
-	if radix < MinRadix || radix > MaxRadix {
-		return "", ErrRadixOutOfRange
-	}
-
+// The specified radix must be between MinRadix and MaxRadix inclusively.
+func ToString(n float64, radix int) string {
 	// If n is NaN then the result is always NaN.
 	if math.IsNaN(n) {
-		return "NaN", nil
+		return "NaN"
 	}
 
 	// If n is 0, then the result is always zero.
 	if n == 0 {
-		return "0", nil
+		return "0"
 	}
 
 	// If n is positive or negative infinity, return infinity in string representation.
 	if math.IsInf(n, 1) {
-		return "Infinity", nil
+		return "Infinity"
 	} else if math.IsInf(n, -1) {
-		return "-Infinity", nil
+		return "-Infinity"
 	}
 
 	// Buffer for the result. We start with the decimal point in the
@@ -73,9 +84,6 @@ func ToString(n float64, radix int) (string, error) {
 	// We only compute fractional digits up to the input float64's precision.
 	delta := 0.5 * (internal.WrapF64(n).Next() - n)
 	delta = math.Max(internal.WrapF64(0).Next(), delta)
-	if delta <= 0 {
-		return "", fmt.Errorf("delta not > 0: %f", delta)
-	}
 	if fraction >= delta {
 		// Insert decimal point.
 		buffer[fractionCursor] = '.'
@@ -101,9 +109,6 @@ func ToString(n float64, radix int) (string, error) {
 					for {
 						fractionCursor--
 						if fractionCursor == bufferSize/2 {
-							if buffer[fractionCursor] != '.' {
-								return "", fmt.Errorf("rune at index %d should be '.', instead: %d (%s)", fractionCursor, buffer[fractionCursor], string(buffer[fractionCursor]))
-							}
 							// Carry over the integer part.
 							integer += 1
 							break
@@ -157,13 +162,7 @@ func ToString(n float64, radix int) (string, error) {
 		intCursor--
 		buffer[intCursor] = '-'
 	}
-	if fractionCursor >= bufferSize {
-		return "", fmt.Errorf("fraction cursor not < buffer size: %d, %d", fractionCursor, bufferSize)
-	}
-	if intCursor <= 0 {
-		return "", fmt.Errorf("int cursor is > 0: %d", intCursor)
-	}
 
 	// The result is the range between intCursor and fractionCursor.
-	return string(buffer[intCursor:fractionCursor]), nil
+	return string(buffer[intCursor:fractionCursor])
 }
