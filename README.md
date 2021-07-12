@@ -14,31 +14,21 @@ import (
 )
 
 func main() {
-	// the float64 to convert to radix
-	value := 1.2567
-
-	// converts value to a radix of 16
-	// radix can be between 2 and 36 inclusively
-	result, err := radix.ToString(value, 16)
-	if err != nil {
-		panic(err)
-	}
-
 	// prints: 1.41b71758e2196
 	// the same result can be achieved via calling "(1.2567).toString(16)" in JavaScript.
-	fmt.Println(result)
+	fmt.Println(radix.ToString(1.2567, 16))
 }
 ```
-Check it out on [The Go Playground](https://play.golang.org/p/JFKqE68pII7).
+Check it out on [The Go Playground](https://play.golang.org/p/TiKMW2LnEyH).
 
 ## Benchmarks
+This benchmark was ran on an iMac with an M1 processor.
 ```
-goos: windows
-goarch: amd64
+goos: darwin
+goarch: arm64
 pkg: github.com/CrimsonAIO/radix
-cpu: AMD Ryzen 5 1600 Six-Core Processor            
 BenchmarkConv
-BenchmarkConv-12    	 2363449	       507.3 ns/op
+BenchmarkConv-8   	 3071470	       383.9 ns/op
 ```
 If you wish to benchmark on your own system, clone this repository and run `go test -bench .`
 
